@@ -19,6 +19,5 @@ int main()
         layer_outputs = np.add(np.dot(weights, inputs), biases);
 
     np.display(layer_outputs);
-    np.display(weights);
     return 0;
 }
