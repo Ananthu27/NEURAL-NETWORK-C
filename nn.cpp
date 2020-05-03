@@ -1,6 +1,4 @@
-#include <iostream>
-#include <vector>
-#include "numpy.h"
+#include "layer.h"
 
 using namespace std;
 
@@ -13,16 +11,16 @@ int main()
         {2.0, 5, -1, 2},
         {-1.5, 2.7, 3.3, -0.8}};
 
-    vector<vector<float>> weights = {
-        {0.2, 0.8, -0.5, 1.0},
-        {0.5, -0.91, 0.26, -0.5},
-        {-0.26, -0.27, 0.17, 0.87}};
+    layer l1(4, 12);
+    l1.forward(inputs);
 
-    vector<float> biases = {2, 3, 0.5};
+    layer l2(12, 12);
+    l2.forward(l1.outputs);
 
-    vector<vector<float>> layer_outputs = np.add(np.dot(inputs, np.transpose(weights)), biases);
+    layer out(12, 2);
+    out.forward(l2.outputs);
 
-    np.display(layer_outputs);
+    np.display(out.outputs);
 
     return 0;
 }

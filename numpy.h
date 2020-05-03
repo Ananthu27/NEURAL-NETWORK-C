@@ -99,7 +99,7 @@ void numpy::display(vector<float> a)
     cout << "\t[";
     for (auto v : a)
         cout << fixed << v << "\t";
-    cout << "\b\b\b\b\b\b\b\b]" << endl;
+    cout << "]" << endl;
 }
 
 void numpy::display(vector<vector<float>> a)
