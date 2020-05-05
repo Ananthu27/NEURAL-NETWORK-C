@@ -8,6 +8,7 @@ class numpy
 public:
     vector<float> array1d;
     vector<vector<float>> array2d;
+    int x, y;
 
     numpy(vector<float> a);
     numpy(vector<vector<float>> a);
@@ -22,11 +23,15 @@ public:
 numpy::numpy(vector<float> a)
 {
     array1d = a;
+    x = a.size();
+    y = 0;
 }
 
 numpy::numpy(vector<vector<float>> a)
 {
     array2d = a;
+    x = a.size();
+    y = a[0].size();
 }
 
 void numpy ::display()
