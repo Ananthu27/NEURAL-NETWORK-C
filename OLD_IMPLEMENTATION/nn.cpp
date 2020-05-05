@@ -1,5 +1,4 @@
-// #include "layer.h"
-#include "numpy.h"
+#include "layer.h"
 
 using namespace std;
 
