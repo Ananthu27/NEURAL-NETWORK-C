@@ -15,10 +15,10 @@ int main()
     l1.forward(inputs);
 
     layer l2(12, 12);
-    l2.forward(l1.outputs.array2d);
+    l2.forward(l1.outputs);
 
     layer out(12, 2);
-    out.forward(l2.outputs.array2d);
+    out.forward(l2.outputs);
 
     out.output();
 
