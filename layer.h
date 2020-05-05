@@ -7,9 +7,13 @@ class layer
 {
 public:
     numpy inputs, weights, outputs, biases;
+
+    layer() {}
     layer(int, int);
-    void froward(numpy);
+    ~layer() {}
+
     void forward(vector<vector<float>>);
+    void forward(numpy);
     void output();
 };
 
@@ -28,6 +32,15 @@ layer ::layer(int n_inputs, int n_neurons)
 void layer ::forward(vector<vector<float>> p_inputs)
 {
     inputs = numpy(p_inputs);
+    if (inputs.y == weights.x)
+    {
+        outputs = (inputs * weights) + biases;
+    }
+}
+
+void layer ::forward(numpy p_inputs)
+{
+    inputs = numpy(p_inputs.array2d);
     if (inputs.y == weights.x)
     {
         outputs = (inputs * weights) + biases;

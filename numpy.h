@@ -9,13 +9,16 @@ public:
     vector<float> array1d;
     vector<vector<float>> array2d;
     int x, y;
+
     numpy() {}
     numpy(vector<float> a);
     numpy(vector<vector<float>> a);
     ~numpy() {}
+
     numpy operator+(numpy const &);
     numpy operator-(numpy const &);
     numpy operator*(numpy const &);
+
     void transpose(vector<vector<float>>);
     void display();
 };
@@ -48,10 +51,10 @@ void numpy ::display()
         cout << "[" << endl;
         for (auto v : array2d)
         {
-            cout << "\t[\t";
+            cout << "\t[";
             for (auto value : v)
                 cout << "\t" << (fixed) << value;
-            cout << "]" << endl;
+            cout << "\t]" << endl;
         }
         cout << "]" << endl;
     }
