@@ -9,7 +9,7 @@ public:
     vector<float> array1d;
     vector<vector<float>> array2d;
     int x, y;
-
+    numpy() {}
     numpy(vector<float> a);
     numpy(vector<vector<float>> a);
     ~numpy() {}
@@ -41,18 +41,19 @@ void numpy ::display()
         cout << "[";
         for (auto value : array1d)
             cout << "\t" << (fixed) << value;
-        cout << "]" << endl;
+        cout << "\t]" << endl;
     }
     else
     {
         cout << "[" << endl;
         for (auto v : array2d)
         {
-            cout << "[";
+            cout << "\t[\t";
             for (auto value : v)
                 cout << "\t" << (fixed) << value;
             cout << "]" << endl;
         }
+        cout << "]" << endl;
     }
 }
 
