@@ -75,6 +75,7 @@ void numpy::transpose(vector<vector<float>> a)
 
 numpy numpy ::operator+(numpy const &a)
 {
+    numpy ret;
     // check for both 1d array case
     if (array1d.size() != 0 && a.array1d.size() != 0)
     {
@@ -84,7 +85,7 @@ numpy numpy ::operator+(numpy const &a)
             vector<float> result = vector<float>(a.array1d.size(), 0);
             for (int i = 0; i < result.size(); i++)
                 result[i] = array1d[i] + a.array1d[i];
-            return numpy(result);
+            ret = numpy(result);
         }
     }
 
@@ -98,7 +99,7 @@ numpy numpy ::operator+(numpy const &a)
             for (int i = 0; i < result.size(); i++)
                 for (int j = 0; j < result[0].size(); j++)
                     result[i][j] = array2d[i][j] + a.array1d[j];
-            return numpy(result);
+            ret = numpy(result);
         }
     }
 
@@ -112,14 +113,16 @@ numpy numpy ::operator+(numpy const &a)
             for (int i = 0; i < result.size(); i++)
                 for (int j = 0; j < result[0].size(); j++)
                     result[i][j] = array2d[i][j] + a.array2d[i][j];
-            return numpy(result);
+            ret = numpy(result);
         }
     }
+    return ret;
 }
 
 numpy numpy ::operator-(numpy const &a)
 {
     // check for both 1d array case
+    numpy ret;
     if (array1d.size() != 0 && a.array1d.size() != 0)
     {
         // check for valid additon parameters
@@ -128,7 +131,7 @@ numpy numpy ::operator-(numpy const &a)
             vector<float> result = vector<float>(a.array1d.size(), 0);
             for (int i = 0; i < result.size(); i++)
                 result[i] = array1d[i] - a.array1d[i];
-            return numpy(result);
+            ret = numpy(result);
         }
     }
 
@@ -142,7 +145,7 @@ numpy numpy ::operator-(numpy const &a)
             for (int i = 0; i < result.size(); i++)
                 for (int j = 0; j < result[0].size(); j++)
                     result[i][j] = array2d[i][j] - a.array1d[j];
-            return numpy(result);
+            ret = numpy(result);
         }
     }
 
@@ -156,13 +159,15 @@ numpy numpy ::operator-(numpy const &a)
             for (int i = 0; i < result.size(); i++)
                 for (int j = 0; j < result[0].size(); j++)
                     result[i][j] = array2d[i][j] - a.array2d[i][j];
-            return numpy(result);
+            ret = numpy(result);
         }
     }
+    return ret;
 }
 
 numpy numpy::operator*(numpy const &a)
 {
+    numpy ret;
     // check for valid addition
     if (array2d.size() != 0 && a.array2d.size() != 0)
     {
@@ -175,7 +180,8 @@ numpy numpy::operator*(numpy const &a)
                 for (int j = 0; j < result[0].size(); j++)
                     for (int k = 0; k < array2d[0].size(); k++)
                         result[i][j] += array2d[i][k] * a.array2d[k][j];
-            return numpy(result);
+            ret = numpy(result);
         }
     }
+    return ret;
 }

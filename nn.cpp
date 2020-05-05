@@ -11,13 +11,13 @@ int main()
         {2.0, 5, -1, 2},
         {-1.5, 2.7, 3.3, -0.8}};
 
-    layer l1(4, 12);
+    layer l1(4, 4);
     l1.forward(inputs);
 
-    layer l2(12, 12);
+    layer l2(4, 8);
     l2.forward(l1.outputs);
 
-    layer out(12, 2);
+    layer out(8, 4);
     out.forward(l2.outputs);
 
     out.output();
