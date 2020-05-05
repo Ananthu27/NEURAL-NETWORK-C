@@ -53,7 +53,7 @@ void numpy ::display()
         {
             cout << "\t[";
             for (auto value : v)
-                cout << "\t" << (fixed) << value;
+                cout << "\t" << (fixed) << (showpos) << value;
             cout << "\t]" << endl;
         }
         cout << "]" << endl;
