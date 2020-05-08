@@ -6,8 +6,8 @@ using namespace std;
 class numpy
 {
 public:
-    vector<float> array1d;
-    vector<vector<float>> array2d;
+    // vector<float> array1d;
+    vector<vector<float>> array;
     int x, y;
 
     numpy() {}
@@ -19,37 +19,30 @@ public:
     numpy operator-(numpy const &);
     numpy operator*(numpy const &);
 
-    void transpose(vector<vector<float>>);
+    void transpose();
     void display();
 };
 
 numpy::numpy(vector<float> a)
 {
-    array1d = a;
-    x = a.size();
-    y = 0;
+    array.push_back(a);
+    x = 1;
+    y = a.size();
 }
 
 numpy::numpy(vector<vector<float>> a)
 {
-    array2d = a;
+    array = a;
     x = a.size();
     y = a[0].size();
 }
 
 void numpy ::display()
 {
-    if (array1d.size() != 0)
-    {
-        cout << "[";
-        for (auto value : array1d)
-            cout << "\t" << (fixed) << value;
-        cout << "\t]" << endl;
-    }
-    else
+    if (x > 0 && y > 0)
     {
         cout << "[" << endl;
-        for (auto v : array2d)
+        for (auto v : array)
         {
             cout << "\t[";
             for (auto value : v)
@@ -60,128 +53,87 @@ void numpy ::display()
     }
 }
 
-void numpy::transpose(vector<vector<float>> a)
+void numpy::transpose()
 {
-    if (array2d.size() != 0)
+    if (x > 0 && y > 0)
     {
-        vector<vector<float>> transpose = vector<vector<float>>(array2d[0].size(), vector<float>(array2d.size(), 0));
-        for (int i = 0; i < transpose[0].size(); i++)
-            for (int j = 0; j < transpose.size(); j++)
-                transpose[j][i] = array2d[i][j];
-        array2d.clear();
-        array2d = transpose;
+        vector<vector<float>> transpose = vector<vector<float>>(y, vector<float>(x, 0));
+        for (int i = 0; i < y; i++)
+            for (int j = 0; j < x; j++)
+                transpose[i][j] = array[j][i];
+        array.clear();
+        array = transpose;
     }
 }
 
 numpy numpy ::operator+(numpy const &a)
 {
-    numpy ret;
-    // check for both 1d array case
-    if (array1d.size() != 0 && a.array1d.size() != 0)
+    numpy result;
+    if (x > 0 && y > 0 && a.x > 0 && a.y > 0)
     {
-        // check for valid additon parameters
-        if (array1d.size() == a.array1d.size())
+        if (y == a.y)
         {
-            vector<float> result = vector<float>(a.array1d.size(), 0);
-            for (int i = 0; i < result.size(); i++)
-                result[i] = array1d[i] + a.array1d[i];
-            ret = numpy(result);
+            if (x == a.x)
+            {
+                result = numpy(vector<vector<float>>(x, vector<float>(y, 0)));
+                for (int i = 0; i < x; i++)
+                    for (int j = 0; j < y; j++)
+                        result.array[i][j] = array[i][j] + a.array[i][j];
+            }
+            else if (a.x == 1)
+            {
+                result = numpy(vector<vector<float>>(x, vector<float>(y, 0)));
+                for (int i = 0; i < x; i++)
+                    for (int j = 0; j < y; j++)
+                        result.array[i][j] = array[i][j] + a.array[0][j];
+            }
         }
     }
-
-    // check for one 1d and one 2d case
-    else if (array2d.size() != 0 && a.array1d.size() != 0)
-    {
-        // check for valid parameters
-        if (array2d[0].size() == a.array1d.size())
-        {
-            vector<vector<float>> result = vector<vector<float>>(array2d.size(), vector<float>(array2d[0].size(), 0));
-            for (int i = 0; i < result.size(); i++)
-                for (int j = 0; j < result[0].size(); j++)
-                    result[i][j] = array2d[i][j] + a.array1d[j];
-            ret = numpy(result);
-        }
-    }
-
-    // check for 2d array caes;
-    else if (array2d.size() != 0 && a.array2d.size() != 0)
-    {
-        // chenk for valid inputs
-        if (array2d.size() == a.array2d.size() && array2d[0].size() == a.array2d[0].size())
-        {
-            vector<vector<float>> result = vector<vector<float>>(array2d.size(), vector<float>(array2d[0].size(), 0));
-            for (int i = 0; i < result.size(); i++)
-                for (int j = 0; j < result[0].size(); j++)
-                    result[i][j] = array2d[i][j] + a.array2d[i][j];
-            ret = numpy(result);
-        }
-    }
-    return ret;
+    return result;
 }
 
 numpy numpy ::operator-(numpy const &a)
 {
-    // check for both 1d array case
-    numpy ret;
-    if (array1d.size() != 0 && a.array1d.size() != 0)
+    numpy result;
+    if (x > 0 && y > 0 && a.x > 0 && a.y > 0)
     {
-        // check for valid additon parameters
-        if (array1d.size() == a.array1d.size())
+        if (y == a.y)
         {
-            vector<float> result = vector<float>(a.array1d.size(), 0);
-            for (int i = 0; i < result.size(); i++)
-                result[i] = array1d[i] - a.array1d[i];
-            ret = numpy(result);
+            if (x == a.x)
+            {
+                result = numpy(vector<vector<float>>(x, vector<float>(y, 0)));
+                for (int i = 0; i < x; i++)
+                    for (int j = 0; j < y; j++)
+                        result.array[i][j] = array[i][j] - a.array[i][j];
+            }
+            else if (a.x == 1)
+            {
+                result = numpy(vector<vector<float>>(x, vector<float>(y, 0)));
+                for (int i = 0; i < x; i++)
+                    for (int j = 0; j < y; j++)
+                        result.array[i][j] = array[i][j] - a.array[0][j];
+            }
         }
     }
-
-    // check for one 1d and one 2d case
-    else if (array2d.size() != 0 && a.array1d.size() != 0)
-    {
-        // check for valid parameters
-        if (array2d[0].size() == a.array1d.size())
-        {
-            vector<vector<float>> result = vector<vector<float>>(array2d.size(), vector<float>(array2d[0].size(), 0));
-            for (int i = 0; i < result.size(); i++)
-                for (int j = 0; j < result[0].size(); j++)
-                    result[i][j] = array2d[i][j] - a.array1d[j];
-            ret = numpy(result);
-        }
-    }
-
-    // check for 2d array caes;
-    else if (array2d.size() != 0 && a.array2d.size() != 0)
-    {
-        // chenk for valid inputs
-        if (array2d.size() == a.array2d.size() && array2d[0].size() == a.array2d[0].size())
-        {
-            vector<vector<float>> result = vector<vector<float>>(array2d.size(), vector<float>(array2d[0].size(), 0));
-            for (int i = 0; i < result.size(); i++)
-                for (int j = 0; j < result[0].size(); j++)
-                    result[i][j] = array2d[i][j] - a.array2d[i][j];
-            ret = numpy(result);
-        }
-    }
-    return ret;
+    return result;
 }
 
 numpy numpy::operator*(numpy const &a)
 {
-    numpy ret;
+    numpy result;
     // check for valid addition
-    if (array2d.size() != 0 && a.array2d.size() != 0)
+    if (x > 0 && y > 0 && a.x > 0 && a.y > 0)
     {
         // check for valid input dimetions
-        if (array2d[0].size() == a.array2d.size())
+        if (y == a.x)
         {
-            vector<vector<float>> result = vector<vector<float>>(array2d.size(), vector<float>(a.array2d[0].size(), 0));
+            result = numpy(vector<vector<float>>(x, vector<float>(a.y, 0)));
 
-            for (int i = 0; i < result.size(); i++)
-                for (int j = 0; j < result[0].size(); j++)
-                    for (int k = 0; k < array2d[0].size(); k++)
-                        result[i][j] += array2d[i][k] * a.array2d[k][j];
-            ret = numpy(result);
+            for (int i = 0; i < x; i++)
+                for (int j = 0; j < a.y; j++)
+                    for (int k = 0; k < y; k++)
+                        result.array[i][j] += array[i][k] * a.array[k][j];
         }
     }
-    return ret;
+    return result;
 }

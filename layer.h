@@ -26,7 +26,7 @@ layer ::layer(int n_inputs, int n_neurons)
 
     for (int i = 0; i < weights.x; i++)
         for (int j = 0; j < weights.y; j++)
-            weights.array2d[i][j] = rand() * 0.000000001 - 1;
+            weights.array[i][j] = rand() * 0.000000001 - 1;
 }
 
 void layer ::forward(vector<vector<float>> p_inputs)
@@ -40,7 +40,7 @@ void layer ::forward(vector<vector<float>> p_inputs)
 
 void layer ::forward(numpy p_inputs)
 {
-    inputs = numpy(p_inputs.array2d);
+    inputs = numpy(p_inputs.array);
     if (inputs.y == weights.x)
     {
         outputs = (inputs * weights) + biases;

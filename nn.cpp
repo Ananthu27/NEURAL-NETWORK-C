@@ -17,7 +17,7 @@ int main()
     layer l2(4, 8);
     l2.forward(l1.outputs);
 
-    layer out(8, 4);
+    layer out(8, 1);
     out.forward(l2.outputs);
 
     out.output();
