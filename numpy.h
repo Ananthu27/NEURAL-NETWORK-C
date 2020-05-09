@@ -1,6 +1,5 @@
 #include <iostream>
 #include <vector>
-
 using namespace std;
 
 class numpy
@@ -18,8 +17,18 @@ public:
     numpy operator+(numpy const &);
     numpy operator-(numpy const &);
     numpy operator*(numpy const &);
+    // veritcal join
+    numpy operator|(numpy);
+    // horizontal join
+    numpy operator||(numpy);
 
     void transpose();
+    void swap(int, int);
+
+    // quicksort
+    int partition(int, int, int);
+    void quicksort(int, int, int);
+
     void display();
 };
 
@@ -39,6 +48,7 @@ numpy::numpy(vector<vector<float>> a)
 
 void numpy ::display()
 {
+    cout << showpos << fixed;
     if (x > 0 && y > 0)
     {
         cout << "[" << endl;
@@ -46,11 +56,12 @@ void numpy ::display()
         {
             cout << "\t[";
             for (auto value : v)
-                cout << "\t" << (fixed) << (showpos) << value;
+                cout << "\t" << value;
             cout << "\t]" << endl;
         }
         cout << "]" << endl;
     }
+    cout << noshowpos;
 }
 
 void numpy::transpose()
@@ -63,6 +74,8 @@ void numpy::transpose()
                 transpose[i][j] = array[j][i];
         array.clear();
         array = transpose;
+        x = array.size();
+        y = array[0].size();
     }
 }
 
@@ -136,4 +149,85 @@ numpy numpy::operator*(numpy const &a)
         }
     }
     return result;
+}
+
+numpy numpy::operator|(numpy a)
+{
+    numpy result;
+    if (x > 0 && y > 0 && a.x > 0 && a.y > 0)
+    {
+        result = numpy(vector<vector<float>>(max(x, a.x), vector<float>(y + a.y, 0)));
+        // threadable
+        for (int i = 0; i < x; i++)
+            for (int j = 0; j < y; j++)
+                result.array[i][j] = array[i][j];
+        // threadable
+        for (int i = 0; i < a.x; i++)
+            for (int j = 0; j < a.y; j++)
+                result.array[i][j + y] = a.array[i][j];
+    }
+    return result;
+}
+
+numpy numpy::operator||(numpy a)
+{
+    numpy result;
+    if (x > 0 && y > 0 && a.x > 0 && a.y > 0)
+    {
+        result = numpy(vector<vector<float>>(x + a.x, vector<float>(max(y, a.y), 0)));
+        // threadable
+        for (int i = 0; i < x; i++)
+            for (int j = 0; j < y; j++)
+                result.array[i][j] = array[i][j];
+        // threadable
+        for (int i = 0; i < a.x; i++)
+            for (int j = 0; j < a.y; j++)
+                result.array[i + x][j] = a.array[i][j];
+    }
+    return result;
+}
+
+void numpy ::swap(int i, int j)
+{
+    if (i >= 0 && j >= 0 && i < x && j < x)
+    {
+        vector<float> temp = array[i];
+        array[i] = array[j];
+        array[j] = temp;
+    }
+}
+
+int numpy ::partition(int low, int high, int c = 0)
+{
+    float pivot = array[low][c];
+    int i = low;
+    int j = high + 1;
+
+    while (i < j)
+    {
+        do
+        {
+            i++;
+        } while (pivot <= array[i][c]);
+        do
+        {
+            j--;
+        } while (pivot > array[j][c]);
+
+        if (i < j)
+            swap(i, j);
+    }
+    swap(low, j);
+    return j;
+}
+
+void numpy ::quicksort(int low, int high, int c = 0)
+{
+    int p;
+    if (low < high)
+    {
+        p = partition(low, high, c);
+        quicksort(low, (p - 1), c);
+        quicksort((p + 1), high, c);
+    }
 }

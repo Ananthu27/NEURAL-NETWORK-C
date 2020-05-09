@@ -4,7 +4,6 @@ using namespace std;
 
 int main()
 {
-    // numpy np;
 
     vector<vector<float>> inputs = {
         {1, 2, 3, 2.5},
@@ -21,6 +20,5 @@ int main()
     out.forward(l2.outputs);
 
     out.output();
-
     return 0;
 }
