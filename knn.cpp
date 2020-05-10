@@ -16,7 +16,7 @@ public:
     };
     void get_distances(numpy);
     numpy nearest(numpy, int);
-    int predict(numpy, int);
+    int predict(numpy, int, int);
 };
 
 void knn ::get_distances(numpy point)
@@ -47,6 +47,10 @@ void knn ::get_distances(numpy point)
         classV.push_back(vector<float>(1, array[i][y - 1]));
 
     distances = numpy(indexV) | distances | numpy(classV);
+
+    // if this doesnt sort it right then do some other sort , with exception handleing
+    distances.quicksort(0, distances.array.size() - 1, 1);
+
     this->point = point.array[0];
 }
 
@@ -61,29 +65,35 @@ numpy knn ::nearest(numpy point, int k = 3)
     if (k > distances.array.size())
         k = distances.array.size();
 
-    // if this doesnt sort it right then do some other sort , with exception handleing
-    distances.quicksort(0, distances.array.size() - 1, 1);
     result = numpy(vector<vector<float>>(distances.array.begin() + (distances.x - k), distances.array.end()));
 
     // now return the nearest
     return result;
 }
 
-int knn ::predict(numpy point, int k)
+int knn ::predict(numpy point, int k, int no_of_classes)
 {
-    float cls = 0;
+    vector<int> count = vector<int>(no_of_classes + 1, 0);
+
     numpy result;
 
     result = nearest(point, k);
 
-    result.display();
-
     for (int i = 0; i < result.x; i++)
-        cls += result.array[i][result.array.size() - 1];
+        count[result.array[i][result.y - 1]]++;
 
-    cls /= result.x;
+    int max = -1;
+    int index;
+    for (int i = 0; i < count.size(); i++)
+    {
+        if (count[i] > max)
+        {
+            max = count[i];
+            index = i;
+        }
+    }
 
-    return round(cls);
+    return index;
 }
 
 int main()
@@ -104,7 +114,7 @@ int main()
     vector<float> vp = {1, 1};
     numpy point(vp);
 
-    int cls = clf.predict(point, 3);
+    int cls = clf.predict(point, 7, 2);
 
     cout << cls << endl;
 
