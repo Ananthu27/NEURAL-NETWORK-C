@@ -49,5 +49,5 @@ void layer ::forward(numpy p_inputs)
 
 void layer::output()
 {
-    outputs.display();
+    outputs.display(outputs.array);
 }

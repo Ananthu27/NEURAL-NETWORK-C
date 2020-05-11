@@ -1,5 +1,6 @@
 #include <iostream>
 #include <vector>
+#include <fstream>
 using namespace std;
 
 class numpy
@@ -29,7 +30,11 @@ public:
     int partition(int, int, int);
     void quicksort(int, int, int);
 
-    void display();
+    // numpy io
+    void read_csv(char *);
+    void head(int);
+    void tail(int);
+    void display(vector<vector<float>>);
 };
 
 numpy::numpy(vector<float> a)
@@ -46,13 +51,23 @@ numpy::numpy(vector<vector<float>> a)
     y = a[0].size();
 }
 
-void numpy ::display()
+void numpy ::head(int n = 5)
+{
+    display(vector<vector<float>>(array.begin(), array.begin() + n));
+}
+
+void numpy ::tail(int n = 5)
+{
+    display(vector<vector<float>>(array.begin() + (array.size() - n), array.end()));
+}
+
+void numpy ::display(vector<vector<float>> arr)
 {
     cout << showpos << fixed;
     if (x > 0 && y > 0)
     {
         cout << "[" << endl;
-        for (auto v : array)
+        for (auto v : arr)
         {
             cout << "\t[";
             for (auto value : v)
@@ -230,4 +245,57 @@ void numpy ::quicksort(int low, int high, int c = 0)
         quicksort(low, (p - 1), c);
         quicksort((p + 1), high, c);
     }
+}
+
+//io
+
+void numpy ::read_csv(char *filename)
+{
+    fstream file(filename, ios::app);
+    file << " ";
+    file.close();
+    file = fstream(filename, ios::in);
+
+    if (file.is_open())
+    {
+        array.clear();
+        string line;
+        vector<float> lineV;
+        int start = 0, end = 0;
+
+        while (getline(file, line))
+        {
+            start = 0;
+            end = start;
+            lineV.clear();
+
+            for (int i = 0; i < line.size(); i++)
+            {
+                if (line[i] == ',' || i == line.size() - 1)
+                {
+                    end = i;
+                    string temp(line.begin() + start, line.begin() + end);
+                    start = end = i + 1;
+                    try
+                    {
+                        lineV.push_back(stof(temp));
+                    }
+                    catch (exception e)
+                    {
+                        // cout << " error caught , couldnt convert and push :" << temp << endl;
+                    }
+                }
+            }
+            if (lineV.size() > 0)
+            {
+                array.push_back(lineV);
+                lineV.clear();
+            }
+        }
+    }
+    else
+    {
+        cout << "error opening file check filename in numpy.read_csv() call" << endl;
+    }
+    file.close();
 }

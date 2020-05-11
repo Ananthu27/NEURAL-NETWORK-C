@@ -7,13 +7,17 @@ class knn : public numpy
 public:
     numpy distances;
     vector<float> point;
+
     // modify ...
+    knn(){};
     knn(vector<vector<float>> dataframe)
     {
         array = dataframe;
         x = dataframe.size();
         y = dataframe[0].size();
     };
+    ~knn() {}
+
     void get_distances(numpy);
     numpy nearest(numpy, int);
     int predict(numpy, int, int);
@@ -98,25 +102,12 @@ int knn ::predict(numpy point, int k, int no_of_classes)
 
 int main()
 {
-    vector<vector<float>> df = {
-        {1.8, 3, 1},
-        {4, 5, 2},
-        {6, 3, 1},
-        {2, 1, 2},
-        {6, 3, 1},
-        {7, 5, 2},
-        {9, 3, 1},
-        {-5, 1, 2},
-        {-5, -8, 1},
-    };
-    knn clf(df);
+    // knn implementation
 
-    vector<float> vp = {1, 1};
-    numpy point(vp);
-
-    int cls = clf.predict(point, 7, 2);
-
-    cout << cls << endl;
+    knn clf;
+    char filename[] = "/ANNA/PROGRAMS/DATASETS/bcc.csv";
+    clf.read_csv(filename);
+    clf.head();
 
     return 0;
 }
