@@ -30,6 +30,9 @@ public:
     int partition(int, int, int);
     void quicksort(int, int, int);
 
+    // bubblesort
+    void bubblesort(int);
+
     // numpy io
     void read_csv(char *);
     void head(int);
@@ -53,11 +56,15 @@ numpy::numpy(vector<vector<float>> a)
 
 void numpy ::head(int n = 5)
 {
+    if (n > x)
+        n = x;
     display(vector<vector<float>>(array.begin(), array.begin() + n));
 }
 
 void numpy ::tail(int n = 5)
 {
+    if (n > x)
+        n = x;
     display(vector<vector<float>>(array.begin() + (array.size() - n), array.end()));
 }
 
@@ -222,16 +229,24 @@ int numpy ::partition(int low, int high, int c = 0)
     {
         do
         {
-            i++;
+            if (i + 1 < x)
+                i++;
+            else
+                break;
         } while (pivot <= array[i][c]);
+
         do
         {
-            j--;
+            if (j - 1 >= 0)
+                j--;
+            else
+                break;
         } while (pivot > array[j][c]);
 
         if (i < j)
             swap(i, j);
     }
+
     swap(low, j);
     return j;
 }
@@ -239,11 +254,27 @@ int numpy ::partition(int low, int high, int c = 0)
 void numpy ::quicksort(int low, int high, int c = 0)
 {
     int p;
-    if (low < high)
+    if (low < high && c >= 0 && c < y)
     {
+
         p = partition(low, high, c);
         quicksort(low, (p - 1), c);
         quicksort((p + 1), high, c);
+    }
+}
+
+void numpy ::bubblesort(int c = 0)
+{
+    if (x > 0)
+    {
+        for (int i = x - 1; i > 0; i--)
+        {
+            for (int j = 0; j < i; j++)
+            {
+                if (array[j][c] < array[j + 1][c])
+                    swap(j, j + 1);
+            }
+        }
     }
 }
 
@@ -292,6 +323,8 @@ void numpy ::read_csv(char *filename)
                 lineV.clear();
             }
         }
+        x = array.size();
+        y = array[0].size();
     }
     else
     {
