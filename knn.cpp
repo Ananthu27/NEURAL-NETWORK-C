@@ -62,7 +62,7 @@ void knn ::get_distances(numpy point)
 
             // cout << "start:sort" << endl;
             distances.quicksort(0, distances.array.size() - 1, 1);
-            distances.bubblesort(1);
+            // distances.bubblesort(1);
             // cout << "end:sort" << endl;
 
             this->point = point.array[0];
