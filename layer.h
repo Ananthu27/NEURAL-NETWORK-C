@@ -1,5 +1,6 @@
 #include "numpy.h"
 #include <ctime>
+#include "afuncs.h"
 
 using namespace std;
 
@@ -45,6 +46,9 @@ void layer ::forward(numpy p_inputs)
     {
         outputs = (inputs * weights) + biases;
     }
+    for (int i = 0; i < outputs.x; i++)
+        for (int j = 0; j < outputs.y; j++)
+            outputs.array[i][j] = sigmoid(outputs.array[i][j]);
 }
 
 void layer::output()
