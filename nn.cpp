@@ -1,5 +1,6 @@
 #include "layer.h"
 // #include "knn.h"
+#include "afuncs.h"
 
 using namespace std;
 
