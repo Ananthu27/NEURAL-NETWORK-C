@@ -18,6 +18,7 @@ public:
     numpy operator+(numpy const &);
     numpy operator-(numpy const &);
     numpy operator*(numpy const &);
+    numpy operator^(numpy const &);
     // veritcal join
     numpy operator|(numpy);
     // horizontal join
@@ -168,6 +169,25 @@ numpy numpy::operator*(numpy const &a)
                 for (int j = 0; j < a.y; j++)
                     for (int k = 0; k < y; k++)
                         result.array[i][j] += array[i][k] * a.array[k][j];
+        }
+    }
+    return result;
+}
+
+numpy numpy::operator^(numpy const &a)
+{
+    numpy result;
+    // check for valid addition
+    if (x > 0 && y > 0 && a.x > 0 && a.y > 0)
+    {
+        // check for valid input dimetions
+        if (x == a.x && y == a.y)
+        {
+            result = numpy(vector<vector<float>>(x, vector<float>(y, 0)));
+
+            for (int i = 0; i < x; i++)
+                for (int j = 0; j < y; j++)
+                    result.array[i][j] = array[i][j] * a.array[i][j];
         }
     }
     return result;

@@ -8,20 +8,48 @@ int main()
 {
     // tutorial implementation ...
     vector<vector<float>> inputs = {
-        {1, 2, 3, 2.5},
-        {2.0, 5, -1, 2},
-        {1.5, 2.7, 3.3, -0.8}};
+        {0, 0, 0},
+        {0, 0, 1},
+        {0, 1, 0},
+        {0, 1, 1},
+        {1, 0, 0},
+        {1, 0, 1},
+        {1, 1, 0},
+        {1, 1, 1},
+    };
 
-    layer l1(4, 4);
+    vector<vector<float>> targetv = {
+        {0},
+        {1},
+        {0},
+        {1},
+        {0},
+        {1},
+        {0},
+        {1},
+    };
+    numpy target(targetv);
+
+    vector<vector<float>> onev = {
+        {1},
+        {1},
+        {1},
+        {1},
+        {1},
+        {1},
+        {1},
+        {1},
+    };
+    numpy one(onev);
+
+    layer l1(3, 4);
     l1.forward(inputs);
 
-    layer l2(4, 8);
+    layer l2(4, 1);
     l2.forward(l1.outputs);
 
-    layer out(8, 1);
-    out.forward(l2.outputs);
-
-    out.output();
+    // l2.output();
+    std::cout << l2.cal_error(target) << std::endl;
 
     return 0;
 }
