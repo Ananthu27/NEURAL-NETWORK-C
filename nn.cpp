@@ -7,49 +7,35 @@ using namespace std;
 int main()
 {
     // tutorial implementation ...
-    vector<vector<float>> inputs = {
-        {0, 0, 0},
-        {0, 0, 1},
-        {0, 1, 0},
-        {0, 1, 1},
-        {1, 0, 0},
-        {1, 0, 1},
-        {1, 1, 0},
-        {1, 1, 1},
+    vector<vector<float>> input = {
+        {-1, -1},
+        {-1, +1},
+        {+1, -1},
+        {+1, +1},
     };
 
-    vector<vector<float>> targetv = {
-        {0},
-        {1},
-        {0},
-        {1},
+    // biases[no of neurons]
+    // weights[no of neurons][n inputs]
+    // layer(n inputs, no of neurons)
+
+    vector<vector<float>> target = {
         {0},
         {1},
         {0},
         {1},
     };
-    numpy target(targetv);
 
-    vector<vector<float>> onev = {
-        {1},
-        {1},
-        {1},
-        {1},
-        {1},
-        {1},
-        {1},
-        {1},
-    };
-    numpy one(onev);
+    layer l1(2, 1);
+    l1.forward(input);
+    l1.weights.display();
+    l1.outputs.display();
 
-    layer l1(3, 4);
-    l1.forward(inputs);
-
-    layer l2(4, 1);
-    l2.forward(l1.outputs);
-
-    // l2.output();
-    std::cout << l2.cal_error(target) << std::endl;
-
+    for (int i = 0; i < 100; i++)
+    {
+        l1.forward(input);
+        l1.backpropagate(target);
+    }
+    l1.weights.display();
+    l1.outputs.display();
     return 0;
 }

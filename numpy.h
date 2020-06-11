@@ -17,14 +17,18 @@ public:
 
     numpy operator+(numpy const &);
     numpy operator-(numpy const &);
+    // matrix multiplication
     numpy operator*(numpy const &);
+    // linear multiplication
     numpy operator^(numpy const &);
     // veritcal join
     numpy operator|(numpy);
     // horizontal join
     numpy operator||(numpy);
 
-    void transpose();
+    numpy get_identity();
+    numpy transpose();
+
     void swap(int, int);
 
     // quicksort
@@ -39,6 +43,7 @@ public:
     void head(int);
     void tail(int);
     void display(vector<vector<float>>);
+    void display();
 };
 
 numpy::numpy(vector<float> a)
@@ -72,7 +77,7 @@ void numpy ::tail(int n = 5)
 void numpy ::display(vector<vector<float>> arr)
 {
     cout << showpos << fixed;
-    if (x > 0 && y > 0)
+    if (arr.size() > 0 && arr[0].size() > 0)
     {
         cout << "[" << endl;
         for (auto v : arr)
@@ -87,19 +92,51 @@ void numpy ::display(vector<vector<float>> arr)
     cout << noshowpos;
 }
 
-void numpy::transpose()
+void numpy ::display()
 {
+    cout << showpos << fixed;
     if (x > 0 && y > 0)
     {
-        vector<vector<float>> transpose = vector<vector<float>>(y, vector<float>(x, 0));
+        cout << "[" << endl;
+        for (auto v : array)
+        {
+            cout << "\t[";
+            for (auto value : v)
+                cout << "\t" << value;
+            cout << "\t]" << endl;
+        }
+        cout << "]" << endl;
+    }
+    cout << noshowpos;
+}
+
+numpy numpy::get_identity()
+{
+    numpy identity;
+    if (x == 1)
+    {
+        identity = numpy(vector<vector<float>>(y, vector<float>(y, 0)));
+        for (int i = 0; i < y; i++)
+            for (int j = 0; j < y; j++)
+                if (i == j)
+                    identity.array[i][j] = array[0][i];
+        return identity;
+    }
+    else
+        return identity;
+}
+
+numpy numpy::transpose()
+{
+    vector<vector<float>> transpose;
+    if (x > 0 && y > 0)
+    {
+        transpose = vector<vector<float>>(y, vector<float>(x, 0));
         for (int i = 0; i < y; i++)
             for (int j = 0; j < x; j++)
                 transpose[i][j] = array[j][i];
-        array.clear();
-        array = transpose;
-        x = array.size();
-        y = array[0].size();
     }
+    return (numpy(transpose));
 }
 
 numpy numpy ::operator+(numpy const &a)

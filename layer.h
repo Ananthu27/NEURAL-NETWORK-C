@@ -7,74 +7,134 @@ using namespace std;
 class layer
 {
 public:
-    numpy inputs, weights, outputs, biases, deltaw;
+    numpy inputs, weights, outputs, biases, weight_change;
+    layer *llink, *rlink;
 
     layer() {}
-    layer(int, int);
+    layer(int, int, layer *, layer *);
     ~layer() {}
 
     void forward(vector<vector<float>>);
-    void forward(numpy);
-    void backpropagate(numpy);
-    void output();
-    float cal_error(numpy);
+    void linkleft(layer *);
+    void linkright(layer *);
+    void backpropagate(vector<vector<float>> target);
+    void backpropagate(numpy target);
 };
 
-layer ::layer(int n_inputs, int n_neurons)
+layer ::layer(int n_inputs, int n_neurons, layer *left_link = NULL, layer *right_link = NULL)
 {
     biases = numpy(vector<float>(n_neurons, 0));
-    weights = numpy(vector<vector<float>>(n_inputs, vector<float>(n_neurons, 0)));
+    weights = numpy(vector<vector<float>>(n_neurons, vector<float>(n_inputs, 0)));
 
     srand((int)time(0));
 
     for (int i = 0; i < weights.x; i++)
         for (int j = 0; j < weights.y; j++)
             weights.array[i][j] = rand() * 0.000000001 - 1;
+
+    if (left_link != NULL)
+        linkleft(left_link);
+    else
+        llink = NULL;
+
+    if (right_link != NULL)
+        linkright(right_link);
+    else
+        rlink = right_link;
 }
 
 void layer ::forward(vector<vector<float>> p_inputs)
 {
     inputs = numpy(p_inputs);
-    if (inputs.y == weights.x)
+    if (inputs.y == weights.y)
     {
-        outputs = (inputs * weights) + biases;
+        outputs = (inputs * weights.transpose());
     }
+
     for (int i = 0; i < outputs.x; i++)
         for (int j = 0; j < outputs.y; j++)
             outputs.array[i][j] = sigmoid(outputs.array[i][j]);
+
+    if (rlink != NULL)
+        rlink->forward(outputs.array);
 }
 
-void layer ::forward(numpy p_inputs)
+void layer::linkleft(layer *left_link)
 {
-    inputs = numpy(p_inputs.array);
-    if (inputs.y == weights.x)
+    try
     {
-        outputs = (inputs * weights) + biases;
+        if (left_link != NULL && left_link->weights.x == weights.y)
+            llink = left_link;
+
+        else
+            return;
     }
-    for (int i = 0; i < outputs.x; i++)
-        for (int j = 0; j < outputs.y; j++)
-            outputs.array[i][j] = sigmoid(outputs.array[i][j]);
-}
-
-void layer::output()
-{
-    outputs.display(outputs.array);
-}
-
-float layer::cal_error(numpy target)
-{
-    float error = 0;
-
-    if (outputs.x == target.x && outputs.y == target.y)
+    catch (exception e)
     {
-        numpy temp(vector<vector<float>>(outputs.x, vector<float>(outputs.y, 0)));
-        for (int i = 0; i < outputs.x; i++)
-            for (int j = 0; j < outputs.y; j++)
-                temp.array[i][j] = 0.5 * pow((target.array[i][j] - outputs.array[i][j]), 2);
-        for (auto v : temp.array)
-            for (auto value : v)
-                error += value;
+        return;
     }
+}
 
-    return error;
+void layer::linkright(layer *right_link)
+{
+    try
+    {
+        if (right_link != NULL && right_link->weights.y == weights.x)
+            rlink = right_link;
+
+        else
+            return;
+    }
+    catch (exception e)
+    {
+        return;
+    }
+}
+
+void layer::backpropagate(vector<vector<float>> target)
+{
+    if (rlink == NULL)
+    {
+        if (target.size() == outputs.x && target[0].size() == outputs.y)
+        {
+            numpy one = numpy(vector<vector<float>>(1, vector<float>(outputs.y, 1)));
+            weight_change = numpy(vector<vector<float>>(weights.x, vector<float>(weights.y, 0)));
+
+            numpy i;
+            numpy o;
+            numpy wc;
+            numpy t;
+            numpy temp;
+
+            for (int j = 0; j < outputs.x; j++)
+            {
+                o = numpy(outputs.array[j]);
+                i = numpy(inputs.array[j]);
+                t = numpy(target[j]);
+
+                wc = (o - t);
+                temp = o.get_identity();
+                wc = wc * temp;
+                temp = one - o;
+                temp = temp.get_identity();
+                wc = wc * temp;
+                wc = wc.transpose();
+                wc = wc * i;
+                weight_change = wc + weight_change;
+            }
+
+            for (int j = 0; j < weight_change.x; j++)
+                for (int k = 0; k < weight_change.y; k++)
+                    weight_change.array[j][k] = (weight_change.array[j][k] / outputs.x);
+
+            weights = weights - weight_change;
+        }
+
+        else
+            return;
+    }
+    else
+    {
+        rlink->backpropagate(target);
+    }
 }
