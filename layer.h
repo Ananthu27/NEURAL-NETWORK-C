@@ -17,10 +17,8 @@ public:
     void forward(vector<vector<float>>);
     void linkleft(layer *);
     void linkright(layer *);
-    void update_weights();
     void backpropagate(vector<vector<float>> target);
-    numpy wwcim();
-    void backpropagate();
+    void backpropagate(numpy target);
 };
 
 layer ::layer(int n_inputs, int n_neurons, layer *left_link = NULL, layer *right_link = NULL)
@@ -93,16 +91,6 @@ void layer::linkright(layer *right_link)
     }
 }
 
-void layer::update_weights()
-{
-    if (weight_change.x > 0 && weight_change.y > 0)
-    {
-        weights = weights - weight_change;
-        if (llink != NULL)
-            llink->update_weights();
-    }
-}
-
 void layer::backpropagate(vector<vector<float>> target)
 {
     if (rlink == NULL)
@@ -140,9 +128,12 @@ void layer::backpropagate(vector<vector<float>> target)
                     weight_change.array[j][k] = (weight_change.array[j][k] / outputs.x);
 
             weights = weights - weight_change;
+<<<<<<< HEAD
             // if (llink != NULL)
             //     llink->backpropagate();
             // update_weights();
+=======
+>>>>>>> parent of 59a3cc1... complete backpropagation attempt 1
         }
 
         else
@@ -152,44 +143,4 @@ void layer::backpropagate(vector<vector<float>> target)
     {
         rlink->backpropagate(target);
     }
-}
-
-numpy layer::wwcim()
-{
-    numpy matrix;
-    matrix = (weights.transpose() * weight_change).get_identity();
-
-    if (rlink == NULL)
-        return matrix;
-
-    else
-        return (matrix + rlink->wwcim());
-}
-
-void layer::backpropagate()
-{
-    {
-        numpy one = numpy(vector<vector<float>>(1, vector<float>(outputs.y, 1)));
-        weight_change = numpy(vector<vector<float>>(weights.x, vector<float>(weights.y, 0)));
-
-        numpy h;
-        numpy temp;
-        numpy i;
-        for (int j = 0; j < outputs.x; j++)
-        {
-            i = numpy(inputs.array[j]);
-            h = i * weights.transpose();
-            numpy temp = one - h;
-            temp = temp.transpose() * i;
-            temp = rlink->wwcim() * temp;
-            weight_change = weight_change + temp;
-        }
-        for (int j = 0; j < weight_change.x; j++)
-            for (int k = 0; k < weight_change.y; k++)
-                weight_change.array[j][k] = (weight_change.array[j][k] / outputs.x);
-    }
-    if (llink != NULL)
-        llink->backpropagate();
-    else
-        return;
 }

@@ -120,16 +120,10 @@ numpy numpy::get_identity()
             for (int j = 0; j < y; j++)
                 if (i == j)
                     identity.array[i][j] = array[0][i];
+        return identity;
     }
-    else if (x == y)
-    {
-        identity = numpy(vector<vector<float>>(y, vector<float>(y, 0)));
-        for (int i = 0; i < y; i++)
-            for (int j = 0; j < y; j++)
-                if (i == j)
-                    identity.array[i][j] = array[i][j];
-    }
-    return identity;
+    else
+        return identity;
 }
 
 numpy numpy::transpose()
