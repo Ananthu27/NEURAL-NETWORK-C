@@ -128,12 +128,6 @@ void layer::backpropagate(vector<vector<float>> target)
                     weight_change.array[j][k] = (weight_change.array[j][k] / outputs.x);
 
             weights = weights - weight_change;
-<<<<<<< HEAD
-            // if (llink != NULL)
-            //     llink->backpropagate();
-            // update_weights();
-=======
->>>>>>> parent of 59a3cc1... complete backpropagation attempt 1
         }
 
         else
