@@ -139,10 +139,10 @@ void layer::backpropagate(vector<vector<float>> target)
                 for (int k = 0; k < weight_change.y; k++)
                     weight_change.array[j][k] = (weight_change.array[j][k] / outputs.x);
 
-            // weights = weights - weight_change;
-            if (llink != NULL)
-                llink->backpropagate();
-            update_weights();
+            weights = weights - weight_change;
+            // if (llink != NULL)
+            //     llink->backpropagate();
+            // update_weights();
         }
 
         else
