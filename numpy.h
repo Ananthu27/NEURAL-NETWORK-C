@@ -1,6 +1,8 @@
 #include <iostream>
 #include <vector>
 #include <fstream>
+#include <algorithm>
+#include <functional>
 using namespace std;
 
 class numpy
@@ -150,15 +152,13 @@ numpy numpy ::operator+(numpy const &a)
             {
                 result = numpy(vector<vector<float>>(x, vector<float>(y, 0)));
                 for (int i = 0; i < x; i++)
-                    for (int j = 0; j < y; j++)
-                        result.array[i][j] = array[i][j] + a.array[i][j];
+                    std::transform(begin(array[i]), end(array[i]), begin(a.array[i]), begin(result.array[i]), std::plus<float>());
             }
             else if (a.x == 1)
             {
                 result = numpy(vector<vector<float>>(x, vector<float>(y, 0)));
                 for (int i = 0; i < x; i++)
-                    for (int j = 0; j < y; j++)
-                        result.array[i][j] = array[i][j] + a.array[0][j];
+                    std::transform(begin(array[i]), end(array[i]), begin(a.array[0]), begin(result.array[i]), std::plus<float>());
             }
         }
     }
@@ -176,15 +176,13 @@ numpy numpy ::operator-(numpy const &a)
             {
                 result = numpy(vector<vector<float>>(x, vector<float>(y, 0)));
                 for (int i = 0; i < x; i++)
-                    for (int j = 0; j < y; j++)
-                        result.array[i][j] = array[i][j] - a.array[i][j];
+                    std::transform(begin(array[i]), end(array[i]), begin(a.array[i]), begin(result.array[i]), std::minus<float>());
             }
             else if (a.x == 1)
             {
                 result = numpy(vector<vector<float>>(x, vector<float>(y, 0)));
                 for (int i = 0; i < x; i++)
-                    for (int j = 0; j < y; j++)
-                        result.array[i][j] = array[i][j] - a.array[0][j];
+                    std::transform(begin(array[i]), end(array[i]), begin(a.array[0]), begin(result.array[i]), std::minus<float>());
             }
         }
     }
@@ -217,14 +215,21 @@ numpy numpy::operator^(numpy const &a)
     // check for valid addition
     if (x > 0 && y > 0 && a.x > 0 && a.y > 0)
     {
-        // check for valid input dimetions
-        if (x == a.x && y == a.y)
-        {
-            result = numpy(vector<vector<float>>(x, vector<float>(y, 0)));
+        if (y == a.y)
+        { // check for valid input dimetions
+            if (x == a.x)
+            {
+                result = numpy(vector<vector<float>>(x, vector<float>(y, 0)));
 
-            for (int i = 0; i < x; i++)
-                for (int j = 0; j < y; j++)
-                    result.array[i][j] = array[i][j] * a.array[i][j];
+                for (int i = 0; i < x; i++)
+                    std::transform(begin(array[i]), end(array[i]), begin(a.array[i]), begin(result.array[i]), std::multiplies<float>());
+            }
+            else if (a.x == 1)
+            {
+                result = numpy(vector<vector<float>>(x, vector<float>(y, 0)));
+                for (int i = 0; i < x; i++)
+                    std::transform(begin(array[i]), end(array[i]), begin(a.array[0]), begin(result.array[i]), std::multiplies<float>());
+            }
         }
     }
     return result;
